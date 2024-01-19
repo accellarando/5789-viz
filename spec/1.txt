@@ -1,0 +1,15 @@
+Program 1: Describe an algorithm or system for making a drawing, taking inspiration from Sol LeWitt's Wall Drawings. Write a Processing program to implement that algorithm or system. Note that many of LeWitt's Wall Drawings have a random element ("draw one or more of a set of lines in each square" type of thing). You can use any primitives you like (lines, shapes, curves), but don't use images. 
+
+Algorithm:
+* Assume the canvas is divided into an invisible square grid of arbitrary units. 
+	- For example, these units could be 6 inches by 6 inches, 50 pixels by 50 pixels, or any other dimension that is square.
+* Each grid square may or may not contain a star's origin at its center. 
+	- These stars may have 5, 6, or 7 points and can range in size from 1/2 grid unit to 2 grid units.
+* Stars must have a buffer of at least 1 grid unit in the vertical, horizontal, and diagonal directions - that is, stars cannot touch.
+* Once the grid is populated with stars, begin drawing constellations. 
+	- A constellation consists of lines between stars. 
+	- Each star may be the origin of 0, 1, 2, or 3 constellation lines. (Not every star must be in a constellation.)
+
+Challenges: (These may yield better results but start to get mathy.)
+* Constellations should be simple. To ensure simplicity, each constellation is allowed up to 16 lines in the graph.
+* Constellations should not overlap.
