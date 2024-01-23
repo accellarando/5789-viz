@@ -1,6 +1,8 @@
 // Star Constellation Generator (3D)
 // This program creates a 3D starry sky with constellations on a canvas.
 
+float rotationSpeed = 0.01;
+
 float time = 0.0;           // Time variable for animation
 float timeIncrement = 0.005; // Adjust the time increment for animation speed
 int frameDelay = 30; // Delay between frames in milliseconds
@@ -26,17 +28,18 @@ void setup() {
 
 void draw() {
   background(0); // Clear the background each frame
-  
+
   // Regenerate stars and constellations
   populateStars();
   drawConstellations();
-  
+
   updateMotion(); // Update the motion over time
-  
+  updateRotation(); // Update the rotation over time
+
   // Display stars and constellations
   displayStars();
   displayConstellations();
-  
+
   // Introduce a delay between frames
   delay(frameDelay);
 }
@@ -45,6 +48,12 @@ void updateMotion() {
   time += timeIncrement; // Increment time for animation
 }
 
+void updateRotation() {
+  rotateY(time * rotationSpeed); // Rotate around the Y-axis
+  rotateX(time * rotationSpeed); // Rotate around the X-axis
+}
+
+// Modify the displayConstellations function to use rotated coordinates
 void displayConstellations() {
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
@@ -61,17 +70,17 @@ void displayConstellations() {
 void drawWavyConstellationLine(int i, int j) {
   int neighborI = int(random(cols));
   int neighborJ = int(random(rows));
-  
+
   if (stars[neighborI][neighborJ] != null) {
     float offsetX = sin(time + i * 0.1) * 20.0; // Adjust the amplitude and frequency as needed
     float offsetY = sin(time + j * 0.1) * 20.0;
-    
+
     float startX = stars[i][j].x + offsetX;
     float startY = stars[i][j].y + offsetY;
-    
+
     float endX = stars[neighborI][neighborJ].x + offsetX;
     float endY = stars[neighborI][neighborJ].y + offsetY;
-    
+
     color lineColor = color(random(255), random(255), random(255));
     stroke(lineColor);
     line(startX, startY, stars[i][j].z, endX, endY, stars[neighborI][neighborJ].z);
@@ -123,21 +132,27 @@ void drawConstellationLine(int i, int j) {
 }
 
 void displayStars() {
-  // Display each star in 3D space
+  // Display each star in 3D space with rotation
   for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       if (stars[i][j] != null) {
+        pushMatrix();
+        rotateY(time * rotationSpeed); // Rotate around the Y-axis
+        rotateX(time * rotationSpeed); // Rotate around the X-axis
         stars[i][j].display();
+        popMatrix();
       }
     }
   }
 }
 
+// Reference: https://processing.org/examples/star.html
 class Star {
   float x, y, z;    // Position of the star in 3D space
   int points;    // Number of points in the star shape
   float size;    // Size of the star
   color fillColor; // Fill color of the star
+  float rotationAngle; // Angle of rotation for the star
   
   Star(float x, float y, float z, int points, float size, color fillColor) {
     // Constructor to initialize a Star object
@@ -147,6 +162,7 @@ class Star {
     this.points = points;
     this.size = size;
     this.fillColor = fillColor;
+    this.rotationAngle = random(TWO_PI); // Initialize a random rotation angle
   }
   
   void display() {
@@ -155,6 +171,7 @@ class Star {
     noStroke();
     pushMatrix();
     translate(x, y, z);
+    rotateStar(); // Rotate the star around its own axes
     beginShape();
     float angleOff = TWO_PI / (2 * points); // Calculate angle offset for star shape
     for (float angle = 0; angle < TWO_PI; angle += angleOff) {
@@ -169,5 +186,10 @@ class Star {
     }
     endShape(CLOSE);
     popMatrix();
+  }
+  
+  void rotateStar() {
+    rotateZ(rotationAngle); // Rotate around the Z-axis (star's own axis)
+    rotationAngle += 0.01;  // Adjust the rotation speed as needed
   }
 }
