@@ -2,7 +2,8 @@
 // This program creates a 3D starry sky with constellations on a canvas.
 
 float time = 0.0;           // Time variable for animation
-float timeIncrement = 0.01;  // Increment value for time
+float timeIncrement = 0.005; // Adjust the time increment for animation speed
+int frameDelay = 30; // Delay between frames in milliseconds
 
 int cols, rows;          // Number of columns and rows in the grid
 float unitSize;          // Size of each grid unit
@@ -26,13 +27,19 @@ void setup() {
 void draw() {
   background(0); // Clear the background each frame
   
+  // Regenerate stars and constellations
+  populateStars();
+  drawConstellations();
+  
   updateMotion(); // Update the motion over time
   
   // Display stars and constellations
   displayStars();
   displayConstellations();
+  
+  // Introduce a delay between frames
+  delay(frameDelay);
 }
-
 
 void updateMotion() {
   time += timeIncrement; // Increment time for animation
