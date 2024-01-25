@@ -1,0 +1,73 @@
+Program 2: Develop a Processing program to make an algorithmic or systematic drawing based on some sort of external data. 
+You can be creative on what you use an input data, but you shouldn't rely on random elements. 
+This is a sort of data-mapping problem, but you're after an artistic or impressionistic rendering of the data, not a scientific mapping of the data. 
+It's not important that we be able to see, based on the drawing, what data was used as the basis. 
+What is important is that you can document what data you used, and how you used that data to make your drawing. 
+
+[Algorithm]
+
+Sound Analysis:
+
+1. Utilize the Processing Sound Library:
+   - Import and use the Processing Sound Library for real-time sound spectrum analysis.
+
+2. FFT
+   - Implement the FFT class to analyze audio data and break it down into frequency bands.
+
+Dynamic Shapes:
+
+3. Define Shapes:
+   - Create arrays for shape properties (position, size, angle, speed, type, color).
+   - Initialize shapes with random values for a diverse starting point.
+
+4. Amplitude-based Shape Movement:
+   - Update shape positions based on polar coordinates influenced by the amplitude of the sound.
+ex)
+   - shapeX[i] += cos(shapeAngle[i]) * sum[i] * height * scale;
+   - shapeY[i] += sin(shapeAngle[i]) * sum[i] * height * scale;
+
+5. Smooth Transitions:
+   - Ensure smooth transitions between shapes over time.
+   - Use linear interpolation for transitioning between shape properties.
+
+Transition Effects:
+
+6. Amplitude-based Shape Transitions:
+   - Base shape transitions on the amplitude of the sound for synchronization with music speed.
+   - Adjust shape positions and sizes based on the amplitude.
+ex)
+   - shapeX[i] += cos(shapeAngle[i]) * sum[i] * height * scale * amplitude;
+
+7. Adjustable Transition Duration:
+   - Allows for adjusting the duration of shape transitions for customization.
+ex)
+   - int transitionDuration = /* User-defined value */;
+
+Responsive Speed:
+
+8. Dynamic Speed Adjustment:
+   - Dynamically adjust the program's speed based on the speed of the music.
+   - Higher amplitudes should result in faster transitions.
+
+Customization:
+
+9. Adjustable FFT Bands:
+   - Allows customization of the number of FFT bands used for analysis.
+ex)
+   - int bands = /* User-defined value */;
+
+Coding Guidelines:
+
+10. Experiment with Shape Variety:
+    - Experiment with a variety of shapes, including lines, curves, triangles, and stars.
+    - Use different shapes for visual diversity.
+
+Challenge: Smooth Transitions and Variety:
+
+11. Smooth Transition Control:
+    - Fine-tune transition duration and factor for optimal visual aesthetics.
+    - Ensure smooth transitions between shapes while synchronizing with music speed.
+
+12. Diverse Shape Transformations:
+    - Experiment with diverse shape transformations to enhance visual appeal.
+    - Explore different shapes, sizes, and colors for dynamic variety.
