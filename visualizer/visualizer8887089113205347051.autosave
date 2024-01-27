@@ -1,0 +1,110 @@
+/**
+ * Visualizer
+ *
+ * Given an input audio stream, this visualizer dynamically draws shapes in 
+ * response to the audio.
+ *
+ * See spec/visualizer.txt for more details.
+ *
+ * @author Ella Moss
+ */
+
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+//import processing.sound.*;
+
+FFT fft;
+BeatDetect beat;
+Minim minim;
+AudioPlayer file;
+
+/* User-defined values: */
+final int BANDS = 2048;	 // Number of frequency BANDS - also, the number of shapes.
+final int MINSIZE = 10;  // shape sizes
+final int MAXSIZE = 100; 
+final int MINSPEED = 1;  // shape speeds
+final int MAXSPEED = 5;
+final int FFT_SCALE = 64; // scale the FFT results
+
+float[] spectrum = new float[BANDS]; // Array of frequency bands
+PShape[] shapes = new PShape[BANDS]; // Array of shapes
+float[] shapeSpeeds = new float[BANDS]; // Array of shape speeds
+float[] shapeAngles = new float[BANDS]; // Array of shape angles
+
+void setup() {
+	size(600, 600);         // Set the size of the canvas
+	background(127);		  // Set the background color
+
+	// Initialize audio analysis objects
+	Minim minim = new Minim(this);
+	file = minim.loadFile("audio.mp3", BANDS);
+	fft = new FFT(file.bufferSize(), file.sampleRate());
+	beat = new BeatDetect(file.bufferSize(), file.sampleRate());
+
+	// Instantiate shapes.
+	for (int i = 0; i < BANDS; i++) {
+		/* Shape properties to instantiate: */
+
+		// Position: x, y
+		float x = random(width);
+		float y = random(height);
+
+		// Size: width, height
+		float w = random(MINSIZE, MAXSIZE);
+		float h = random(MINSIZE, MAXSIZE);
+
+		// Type: TRIANGLE, RECT, ELLIPSE
+		int type = int(random(3));
+		// Now create the shape
+		PShape shape;
+		switch(type){
+			case 0: // TRIANGLE
+					// technically not the randomly generated width and height but that's ok :)
+				shape = createShape(TRIANGLE, x, y, x+w, y, x+(w/2), y+h);
+				break;
+			case 1: // RECTANGLE
+				shape = createShape(RECT, x, y, w, h);
+				break;
+			default: // ELLIPSE
+				shape = createShape(ELLIPSE, x, y, w, h);
+				break;
+		}
+
+		// Angle
+		float theta = random(2*PI);
+		shapeAngles[i] = theta;
+		shape.rotate(theta);
+
+		// Color
+		shape.setFill(color(random(255), random(255), random(255)));
+
+		// Speed
+		shapeSpeeds[i] = random(MINSPEED, MAXSPEED);
+
+		shapes[i] = shape;
+	}
+
+	// Start playing the audio file
+	file.loop();
+}
+
+void draw() {
+	// Update if there is a beat
+	beat.detect(file.mix);
+	if (beat.isOnset(1)) {
+		print("BEAT");
+		background(127); // clear the canvas
+
+		// Iterate through each shape:
+		for (int i = 0; i < BANDS; i++) {
+			// Update positions based on FFT results
+			float factor = fft.getBand(i) * FFT_SCALE;
+			float newX = cos(shapeAngles[i]) * factor;
+			float newY = sin(shapeAngles[i]) * factor;
+			shapes[i].translate(newX, newY);
+
+			// Draw shape
+			shape(shapes[i]);
+		}
+	}
+}
