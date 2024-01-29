@@ -47,7 +47,7 @@ AudioPlayer file;
 
 /* User-defined values: */
 final int BANDS = 1024;	 // Number of frequency bands
-final int GROUPS = 32;	 // Number of groups to divide the frequency bands into - also, number of shapes.
+final int GROUPS = 64;	 // Number of groups to divide the frequency bands into - also, number of shapes.
 final int MINSIZE = 10;  // shape sizes
 final int MAXSIZE = 300; 
 final int FFT_SCALE = 64; // scale the FFT results
@@ -223,6 +223,7 @@ void draw() {
 		shapes[i].scale(sum);
 
 		// Draw all shapes
+		noStroke();
 		shapes[i].draw();
 	}
 }
